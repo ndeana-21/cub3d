@@ -6,60 +6,73 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:21:20 by ndeana            #+#    #+#             */
-/*   Updated: 2020/08/29 16:47:21 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/09/16 16:43:43 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int		add_ceilling(t_cub3d *cub3d)
+void			minimap_player(t_map *map, t_cub *cub, int scale)
 {
-	int		x;
-	int		y;
-	int		num_sample;
+	t_vec 	vector;
+	t_wall	wall1;
+	t_wall	wall2;
+	t_wall	wall3;
+	t_wall	wall4;
 
-	if (0 > (num_sample = find_sample(cub3d->map->texture->name_trgb, "C ")))
-		return (print_error("ERROR Have no ceilling\n"));
-	y = 0;
-	while (y < (cub3d->res_y / 2))
-	{
-		x = 0;
-		while (x < cub3d->res_x)
-		{
-			my_mlx_pixel_put(cub3d->data, x, y, cub3d->map->texture->trgb[num_sample]);
-			x++;
-		}
-		y++;
-	}
-	return (1);
+	wall1.vec = make_vector(0, 0, map->res.x, 0);
+	wall2.vec = make_vector(map->res.x, 0, map->res.x, map->res.y);
+	wall3.vec = make_vector(map->res.x, map->res.y, 0, map->res.y);
+	wall4.vec = make_vector(0, map->res.y, 0, 0);
+	
+	wall1.next_wall = &wall2;
+	wall2.next_wall = &wall3;
+	wall3.next_wall = &wall4;
+	wall4.next_wall = NULL;
+	vector = ray_cast(&wall1, map->player->pos, map->res, map->player->pow);
+	vector.start.x = vector.start.x * scale;
+	vector.start.y = vector.start.y * scale;
+	vector.end.x = vector.end.x * scale;
+	vector.end.y = vector.end.y * scale;
+	paint_circle(cub, create_trgb(0,0,255,0), vector.start, scale / 2);
+	paint_line(cub, create_trgb(0,255,100,100), vector);
 }
 
-int		add_floor(t_cub3d *cub3d)
+void			minimap(t_map *map, t_cub *cub, int scale)
 {
-	int		x;
-	int		y;
-	int		num_sample;
+	t_point	coord;
 
-	if (0 > (num_sample = find_sample(cub3d->map->texture->name_trgb, "F ")))
-		return (print_error("ERROR Have no floor\n"));
-	y = cub3d->res_y;
-	while (y >= (cub3d->res_y / 2))
+	coord.y = 0;
+	while (coord.y < map->res.y)
 	{
-		x = 0;
-		while (x < cub3d->res_x)
+		coord.x = 0;
+		while (coord.x < map->res.x)
 		{
-			my_mlx_pixel_put(cub3d->data, x, y, cub3d->map->texture->trgb[num_sample]);
-			x++;
+			if (map->map[(int)coord.y][(int)coord.x] == '1')
+				paint_square(cub, create_trgb(0, 255, 255, 255), coord, scale);
+			else if (map->map[(int)coord.y][(int)coord.x] == '2')
+				paint_square(cub, create_trgb(0, 255, 0, 255), coord, scale);
+			else
+				paint_square(cub, create_trgb(0, 0, 0, 0), coord, scale);
+			coord.x++;
 		}
-		y--;
+		coord.y++;
 	}
-	return (1);
+	minimap_player(cub->map, cub, scale);
 }
 
-int		render_next_frame(t_cub3d *cub3d)
+int		render_next_frame(t_cub *cub)
 {
-	add_ceilling(cub3d);
-	add_floor(cub3d);
-
-	mlx_put_image_to_window(cub3d->mlx, cub3d->win, cub3d->data->img, 0, 0);
+	if (player_keys_move(cub))
+	{
+		cub->data->img = mlx_new_image(cub->mlx, cub->res.x, cub->res.y);
+		cub->data->addr = mlx_get_data_addr(cub->data->img,
+											&cub->data->bits_per_pixel,
+											&cub->data->line_length,
+											&cub->data->endian);
+		minimap(cub->map, cub, 20);
+		mlx_put_image_to_window(cub->mlx, cub->win, cub->data->img, 0, 0);
+		mlx_destroy_image(cub->mlx, cub->data->img);
+	}
+	return(0);
 }

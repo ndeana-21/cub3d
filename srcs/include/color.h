@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   color_utils.c                                      :+:      :+:    :+:   */
+/*   color.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/21 04:44:34 by ndeana            #+#    #+#             */
-/*   Updated: 2020/09/16 00:25:21 by ndeana           ###   ########.fr       */
+/*   Created: 2020/09/16 00:22:30 by ndeana            #+#    #+#             */
+/*   Updated: 2020/09/16 00:24:15 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "color.h"
+#ifndef COLOR_H
+# define COLOR_H
 
-int	set_r(int trgb, int r)
-{
-	return (trgb | (r << 16));
-}
+int						create_trgb(int t, int r, int g, int b);
+int						get_r(int trgb);
+int						set_r(int trgb, int r);
+int						get_g(int trgb);
+int						set_g(int trgb, int g);
+int						get_b(int trgb);
+int						set_b(int trgb, int b);
+int						add_shade(int trgb, double distance);
+int						get_opposite(int trgb);
 
-int	set_g(int trgb, int g)
-{
-	return (trgb | (g << 8));
-}
-
-int	set_b(int trgb, int b)
-{
-	return (trgb | b);
-}
+#endif

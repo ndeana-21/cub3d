@@ -6,7 +6,7 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/14 00:34:09 by ndeana            #+#    #+#             */
-/*   Updated: 2020/08/26 15:59:51 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/09/06 01:15:49 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,15 @@ void	*ft_realloc(void *old_alloc, size_t new_size)
 		free(old_alloc);
 	}
 	return ((void *)new_alloc);
+}
+
+int				ft_pagedel(char ***page, size_t len)
+{
+	if (page)
+	{
+		while (0 < len)
+			free((*page)[--len]);
+		free (*page);
+	}
+	return (-1);
 }

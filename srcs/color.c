@@ -6,9 +6,11 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/12 15:26:33 by ndeana            #+#    #+#             */
-/*   Updated: 2020/08/22 21:00:59 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/09/16 00:24:40 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "color.h"
 
 int	create_trgb(int t, int r, int g, int b)
 {
