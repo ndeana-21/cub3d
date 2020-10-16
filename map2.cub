@@ -1,4 +1,4 @@
-R 900 600
+R 3000 3000
 NO ./img/WALL3.XPM
 SO ./img/WALL0.XPM
 S ./img/SPR_DOG_W1_1.x-bmp.XPM
