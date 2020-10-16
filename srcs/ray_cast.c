@@ -6,13 +6,13 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/06 15:44:00 by ndeana            #+#    #+#             */
-/*   Updated: 2020/09/16 01:40:43 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/09 18:22:40 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int				ll_intersect(t_vec *ray, t_vec wall)
+int			ll_intersect(t_vec *ray, t_vec wall)
 {
 	double	t;
 	double	u;
@@ -24,71 +24,66 @@ int				ll_intersect(t_vec *ray, t_vec wall)
 		(ray->start.y - wall.start.y) * (wall.start.x - wall.end.x)) /
 		((ray->start.x - ray->end.x) * (wall.start.y - wall.end.y) -
 		(ray->start.y - ray->end.y) * (wall.start.x - wall.end.x)));
-	u = - (((ray->start.x - ray->end.x) * (ray->start.y - wall.start.y) -
-		(ray->start.y - ray->end.y) * (ray->start.x - wall.start.x)) /
-		((ray->start.x - ray->end.x) * (wall.start.y - wall.end.y) -
-		(ray->start.y - ray->end.y) * (wall.start.x - wall.end.x)));
-	if (t >= 0 && t <= 1 && u >= 0 && u <= 1)
+	if (t >= 0 && t <= 1)
 	{
-		ray->end.x = ray->start.x + t * (ray->end.x - ray->start.x);
-		ray->end.y = ray->start.y + t * (ray->end.y - ray->start.y);
-		return (TRUE);
+		u = -(((ray->start.x - ray->end.x) * (ray->start.y - wall.start.y) -
+			(ray->start.y - ray->end.y) * (ray->start.x - wall.start.x)) /
+			((ray->start.x - ray->end.x) * (wall.start.y - wall.end.y) -
+			(ray->start.y - ray->end.y) * (wall.start.x - wall.end.x)));
+		if (u >= 0 && u <= 1)
+		{
+			ray->end.x = ray->start.x + t * (ray->end.x - ray->start.x);
+			ray->end.y = ray->start.y + t * (ray->end.y - ray->start.y);
+			return (TRUE);
+		}
 	}
 	return (FALSE);
 }
 
-t_vec			ray_cast(t_wall *wall, t_point pos, t_res max, double pow)
+int			ray_cast(t_vec *ray, t_wall *wall)
 {
-	t_vec	ray;
 	t_wall	*wall_buf;
+	int		counter;
 
-	ray.start.x = pos.x;
-	ray.start.y = pos.y;
-	ray.end.x = pos.x + (max.x + max.y) * sin(rad(pow));
-	ray.end.y = pos.y + (max.x + max.y) * cos(rad(pow));
 	wall_buf = wall;
+	counter = 0;
 	while (wall_buf)
 	{
-		ll_intersect(&ray, wall_buf->vec);
-		wall_buf = wall_buf->next_wall;
+		counter += ll_intersect(ray, wall_buf->vec);
+		wall_buf = (t_wall *)wall_buf->next_wall;
 	}
-	return (ray);
+	return (counter);
 }
 
-t_ray			*rays_casting(t_ray *rays, t_walls *walls,
-								t_player player, t_cub *cub)
+void		rays_casting(t_ray *ray, t_cub *cub, t_map *map, int count_rays)
 {
-	t_ray	*ray;
-
-	ray = rays;
-	ray->pow = PLAYER_FOW / 2;
-	while (ray)
-	{
-		ray->vec = ray_cast(walls->north, player.pos, cub->map->res, ray->pow);
-		ray->vec = ray_cast(walls->south, player.pos, cub->map->res, ray->pow);
-		ray->vec = ray_cast(walls->east, player.pos, cub->map->res, ray->pow);
-		ray->vec = ray_cast(walls->west, player.pos, cub->map->res, ray->pow);
-		ray = ray->next_ray;
-		ray->pow = pow_turn(ray->pow, cub->map->ray_pow_step);
-	}
-	return (rays);
-}
-
-t_ray			*ray_init(int count_rays)
-{
-	t_ray	*ray;
-	t_ray	*start_ray;
+	double	pow;
 	int		i;
 
-	if (!(start_ray = malloc(sizeof(t_ray))))
-		return (NULL);
-	ray = start_ray;
-	i = count_rays;
-	while (--i > 0)
+	pow = pow_turn(0, map->player->pow + (PLAYER_FOW / 2), 0, 360);
+	i = -1;
+	while (++i < count_rays)
 	{
-		if (!(ray->next_ray = malloc(sizeof(t_ray))))
-			return (NULL);
-		ray = ray->next_ray;
+		ray[i].pow = pow;
+		ray[i].vec = make_vector(map->player->pos.x, map->player->pos.y,
+			map->player->pos.x + (map->res.x + map->res.y) * sin(ft_rad(pow)),
+			map->player->pos.y + (map->res.x + map->res.y) * cos(ft_rad(pow)));
+		if (ray_cast(&ray[i].vec, map->walls->north))
+			ray[i].wall = 'N';
+		if (ray_cast(&ray[i].vec, map->walls->south))
+			ray[i].wall = 'S';
+		if (ray_cast(&ray[i].vec, map->walls->east))
+			ray[i].wall = 'E';
+		if (ray_cast(&ray[i].vec, map->walls->west))
+			ray[i].wall = 'W';
+		ray[i].dst = equal_dst(cub->map->player->pos, ray[i].vec.end);
+		pow = pow_turn(pow, -map->ray_pow_step, 0, 360);
 	}
-	return (start_ray);
+}
+
+void		ray_init(t_cub *cub, t_map *map)
+{
+	if (!(map->ray = malloc(sizeof(t_ray) * cub->res.x)))
+		print_error(cub, "ERROR malloc");
+	map->ray_pow_step = PLAYER_FOW / (double)cub->res.x;
 }

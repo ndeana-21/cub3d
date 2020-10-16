@@ -1,34 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   dint4cpy.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 23:25:33 by ndeana            #+#    #+#             */
-/*   Updated: 2020/10/14 12:38:03 by ndeana           ###   ########.fr       */
+/*   Created: 2020/10/01 14:06:01 by ndeana            #+#    #+#             */
+/*   Updated: 2020/10/05 18:21:59 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "bitmapfile.h"
 
-void	*ft_memcpy(void *to, const void *from, size_t n)
+void	dint4cpy(t_dint4 n, unsigned char *dest)
 {
-	unsigned char	*buff_from;
-	unsigned char	*buff_to;
-	size_t			i;
-
-	if (!to && !from)
-		return (NULL);
-	buff_from = (unsigned char*)from;
-	buff_to = (unsigned char*)to;
-	i = -1;
-	while (++i < n)
-	{
-		if (buff_from[i])
-			buff_to[i] = buff_from[i];
-		else
-			buff_to[i] = 0;
-	}
-	return (to);
+	dest[0] = n.d[0];
+	dest[1] = n.d[1];
+	dest[2] = n.d[2];
+	dest[3] = n.d[3];
 }

@@ -6,14 +6,17 @@
 #    By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/03 16:47:25 by ndeana            #+#    #+#              #
-#    Updated: 2020/09/16 16:44:34 by ndeana           ###   ########.fr        #
+#    Updated: 2020/10/14 23:16:29 by ndeana           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS_FILES	=	main.c			color.c			utils.c			mlx_utils.c		\
 				color_utils.c	make_frame.c	hooks.c			cub3d.c			\
 				parser.c		error.c			parser_utils.c	ray_cast.c		\
-				player.c		free_cub3d.c	painting.c
+				player.c		painting.c		get_obj.c		save_bmp.c		\
+				get_obj_utils.c	player_utils.c	parser_path.c	parser_color.c	\
+				parser_map.c	render_scene.c	render_scene_utl.c
+				
 
 HEADER_FILES=	cub3d.h			parser.h		keys_linux.h	color.h			\
 				struct.h
@@ -28,75 +31,80 @@ HEADER_INCL	=	-I./$(HEADER_DIR)
 
 LIBFT_PATH	=	./libft
 LIBFT_LINK	=	-L$(LIBFT_PATH) -lft
-LIBFT_MAKE	=	@$(MAKE) -C $(LIBFT_PATH)
 LIBFT_INCL	=	-I$(LIBFT_PATH)
 
 MLX_PATH	=	./minilibx-linux
 MLX_LINK	=	-L$(MLX_PATH) -lmlx -lXext -lX11
-MLX_MAKE	=	@$(MAKE) -C $(MLX_PATH)
 MLX_INCL	=	-I$(MLX_PATH)
 
+LBMF_PATH	=	./libbitmapfile
+LBMF_LINK	=	-L$(LBMF_PATH) -lbitmapfile
+LBMF_INCL	=	-I$(LBMF_PATH)
 
-LIBS		=	-lm $(MLX_LINK) $(LIBFT_LINK)
-INCLUDES	=	$(HEADER_INCL) $(LIBFT_INCL) $(MLX_INCL)
+LIBS		=	-lm $(MLX_LINK) $(LIBFT_LINK) $(LBMF_LINK)
+INCLUDES	=	$(HEADER_INCL) $(LIBFT_INCL) $(MLX_INCL) $(LBMF_INCL)
 
-CC			=	gcc
-CFLAGS		=	-Wall -Wextra $(INCLUDES)
+MAKE_FLAGS	=	--no-print-directory -si -C
+CC			=	clang
+CFLAGS		=	-Wall -Wextra -Werror -g -O0 $(INCLUDES)
 NAME		=	cub3D
 
-ARGS		=	map.cub
+ARGS		=	map2.cub
+SCREEN		=	screen.bmp
 
 all:		$(NAME)
 
-$(NAME):	$(OBJS) $(HEADERS)
-			@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+%.o: %.c $(HEADERS)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(NAME):	$(OBJS) lib 
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
 bonus:		all
 
 run:		all
-			@./$(NAME) $(ARGS)
+	@./$(NAME) $(ARGS)
 
 lib:			
-			@$(LIBFT_MAKE)
-			@$(PRINT) "$(FGREEN)made LFT$(PNULL)"
-			@$(MLX_MAKE)
-			@$(PRINT) "$(FGREEN)made MLX$(PNULL)"
+	@make $(MAKE_FLAGS) $(LIBFT_PATH)
+	@$(PRINT) "$(FGREEN)made LFT$(PNULL)"
+	@make $(MAKE_FLAGS) $(MLX_PATH)
+	@$(PRINT) "$(FGREEN)made MLX$(PNULL)"
+	@make $(MAKE_FLAGS) $(LBMF_PATH)
+	@$(PRINT) "$(FGREEN)made LBMF$(PNULL)"
 
 norme:
-			@$(LIBFT_MAKE) norme
-			@norminette $(SRCS) $(HEADERS)
+	@make --no-print-directory -C $(LIBFT_PATH) norme
+	@make --no-print-directory -C $(LBMF_PATH) norme
+	@norminette $(SRCS) $(HEADERS)
 
 clean:
-			@$(RM) $(OBJS)
-			@$(PRINT) "$(FYELLOW)remove objs of cub3D$(PNULL)"
-			@$(MLX_MAKE) clean
-			@$(PRINT) "$(FYELLOW)clean mlx$(PNULL)"
-			@$(LIBFT_MAKE) clean
-			@$(PRINT) "$(FYELLOW)clean libft$(PNULL)"
+	@$(RM) $(OBJS) $(SCREEN)
+	@$(PRINT) "$(FYELLOW)remove objs of cub3D$(PNULL)"
+
+fclean:
+	@make clean --no-print-directory
+	@$(RM) $(NAME)
+	@$(PRINT) "$(FYELLOW)remove CUB3D$(PNULL)"
+	@make clean $(MAKE_FLAGS) $(MLX_PATH)
+	@$(PRINT) "$(FYELLOW)clean MLX$(PNULL)"
+	@make fclean $(MAKE_FLAGS) $(LIBFT_PATH)
+	@$(PRINT) "$(FYELLOW)fclean LFT$(PNULL)"
+	@make fclean $(MAKE_FLAGS) $(LBMF_PATH)
+	@$(PRINT) "$(FYELLOW)fclean LBMF$(PNULL)"
 
 
-fclean:		clean
-			@$(RM) $(NAME)
-			@$(PRINT) "$(FYELLOW)remove cub3D$(PNULL)"
-			@$(LIBFT_MAKE) fclean
-			@$(PRINT) "$(FYELLOW)fclean libft$(PNULL)"
+re:			fclean lib
+	@make --no-print-directory
+	@$(PRINT) "$(FGREEN)made CUB3D$(PNULL)"
 
-
-re:			clean
-			@$(MLX_MAKE)
-			@$(PRINT) "$(FGREEN)made MLX$(PNULL)"
-			@$(LIBFT_MAKE)
-			@$(PRINT) "$(FGREEN)made LFT$(PNULL)"
-			@$(MAKE)
-			@$(PRINT) "$(FGREEN)made CUB3D$(PNULL)"
-
-fre:		fclean
-			@$(MLX_MAKE)
-			@$(PRINT) "$(FGREEN)made MLX$(PNULL)"
-			@$(LIBFT_MAKE)
-			@$(PRINT) "$(FGREEN)made LFT$(PNULL)"
-			@$(MAKE)
-			@$(PRINT) "$(FGREEN)made CUB3D$(PNULL)"
+fre:		fclean lib
+	@make re $(MAKE_FLAGS) $(MLX_PATH)
+	@$(PRINT) "$(FGREEN)made MLX$(PNULL)"
+	@make re $(MAKE_FLAGS) $(LIBFT_PATH)
+	@$(PRINT) "$(FGREEN)made LFT$(PNULL)"
+	@make
+	@$(PRINT) "$(FGREEN)made CUB3D$(PNULL)"
 
 .PHONY:		all clean fclean re fre norme bonus run makelib
 

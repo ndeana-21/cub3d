@@ -6,13 +6,24 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 00:28:54 by ndeana            #+#    #+#             */
-/*   Updated: 2020/09/16 01:33:30 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/09 18:22:53 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCT_H
 # define STRUCT_H
-# include "cub3d.h"
+# define TRUE 1
+# define FALSE 0
+# define ERROR -1
+
+typedef struct			s_data
+{
+	void				*img;
+	char				*addr;
+	int					bpp;
+	int					line_len;
+	int					endian;
+}						t_data;
 
 typedef struct			s_point
 {
@@ -34,7 +45,7 @@ typedef struct			s_vec
 
 typedef struct			s_img
 {
-	void				*img;
+	t_data				*data;
 	int					x;
 	int					y;
 }						t_img;
@@ -49,27 +60,18 @@ typedef struct			s_colorlst
 typedef struct			s_pathlst
 {
 	char				*name;
+	char				*path;
 	t_img				*img;
 	struct t_pathlst	*next;
 }						t_pathlst;
-
 
 typedef struct			s_ray
 {
 	t_vec				vec;
 	double				pow;
 	char				wall;
-	struct t_ray		*next_ray;
+	double				dst;
 }						t_ray;
-
-typedef struct			s_data
-{
-    void				*img;
-    char				*addr;
-    int					bits_per_pixel;
-    int					line_length;
-    int					endian;
-}						t_data;
 
 typedef struct			s_parsed
 {
@@ -77,17 +79,11 @@ typedef struct			s_parsed
 	t_colorlst			*color;
 }						t_parsed;
 
-/**
- * pow = 0	 →
- * 		 90	 ↑
- * 		 180 ←
- * 		 270 ↓
-**/
 typedef struct			s_player
 {
-	int					exist;
 	double				pow;
 	t_point				pos;
+	double				pow_y;
 }						t_player;
 
 typedef struct			s_wall
@@ -102,28 +98,39 @@ typedef struct			s_walls
 	t_wall				*east;
 	t_wall				*west;
 	t_wall				*north;
-	void				*img_south;
-	void				*img_east;
-	void				*img_west;
-	void				*img_north;
+	t_img				*img_s;
+	t_img				*img_e;
+	t_img				*img_w;
+	t_img				*img_n;
+	int					celling;
+	int					floor;
 }						t_walls;
+
+typedef struct			s_sprite
+{
+	t_point				coord;
+	double				pow;
+	int					start_pnt;
+	int					wide;
+	int					hight;
+	double				dst;
+}						t_sprite;
 
 typedef struct			s_sprites
 {
 	t_img				*img;
-	t_point				coord;
-	struct t_sprites	*next_sprite;
+	t_sprite			*spr;
 }						t_sprites;
 
 typedef struct			s_map
 {
-	char				*map_path;
 	t_res				res;
+	double				ray_pow_step;
+	char				*map_path;
 	char				**map;
 	t_ray				*ray;
-	double				ray_pow_step;
 	t_walls				*walls;
-	t_sprites			*sprites;
+	t_sprites			*sprite;
 	t_player			*player;
 	t_parsed			*img;
 }						t_map;
@@ -136,6 +143,15 @@ typedef struct			s_key
 	char				d;
 	char				q;
 	char				e;
+	char				m;
+	char				h;
+	char				up;
+	char				down;
+	char				left;
+	char				right;
+	char				shift;
+	int					mouse_x;
+	int					mouse_y;
 }						t_key;
 
 typedef struct			s_cub

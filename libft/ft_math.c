@@ -1,34 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   ft_math.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 23:25:33 by ndeana            #+#    #+#             */
-/*   Updated: 2020/10/14 12:38:03 by ndeana           ###   ########.fr       */
+/*   Created: 2020/10/05 18:07:21 by ndeana            #+#    #+#             */
+/*   Updated: 2020/10/05 18:09:04 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#define PI 3.14159265
 
-void	*ft_memcpy(void *to, const void *from, size_t n)
+double			ft_rad(double deg)
 {
-	unsigned char	*buff_from;
-	unsigned char	*buff_to;
-	size_t			i;
+	return (deg * PI / 180);
+}
 
-	if (!to && !from)
-		return (NULL);
-	buff_from = (unsigned char*)from;
-	buff_to = (unsigned char*)to;
-	i = -1;
-	while (++i < n)
-	{
-		if (buff_from[i])
-			buff_to[i] = buff_from[i];
-		else
-			buff_to[i] = 0;
-	}
-	return (to);
+double			ft_deg(double rad)
+{
+	return (rad / PI * 180);
 }

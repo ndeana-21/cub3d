@@ -6,12 +6,11 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 20:37:31 by ndeana            #+#    #+#             */
-/*   Updated: 2020/09/15 20:37:53 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/06 02:30:38 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
 
 void			paint_rectangle(t_cub *cub, int trgb,
 							t_res start, t_res end)
@@ -34,12 +33,13 @@ void			paint_rectangle(t_cub *cub, int trgb,
 void			paint_line(t_cub *cub, int trgb, t_vec vec)
 {
 	t_point	curent;
-	double 	dist;
-	double 	dx;
-	double 	dy;
+	double	dist;
+	double	dx;
+	double	dy;
 	int		i;
-	
-	dist = abs(vec.end.x - vec.start.x) + abs(vec.end.y - vec.start.y);
+
+	dist = abs((int)(vec.end.x - vec.start.x)) +
+		abs((int)(vec.end.y - vec.start.y));
 	dx = (vec.end.x - vec.start.x) / dist;
 	dy = (vec.end.y - vec.start.y) / dist;
 	i = 0;
@@ -47,7 +47,8 @@ void			paint_line(t_cub *cub, int trgb, t_vec vec)
 	{
 		curent.x = floor(vec.start.x + dx * i);
 		curent.y = floor(vec.start.y + dy * i);
-		if (curent.x >= 0 && curent.y >= 0 && curent.x < cub->res.x && curent.y < cub->res.y)
+		if (curent.x >= 0 && curent.y >= 0 &&
+			curent.x < cub->res.x && curent.y < cub->res.y)
 			my_mlx_pixel_put(cub->data, curent.x, curent.y, trgb);
 		i++;
 	}
@@ -78,7 +79,6 @@ void			paint_square(t_cub *cub, int trgb, t_point coord, int scale)
 void			paint_circle(t_cub *cub, int trgb, t_point coord, int scale)
 {
 	t_point	curent;
-	double	tmp;
 
 	curent.y = (coord.y - scale) > 0 ? coord.y - scale : 0;
 	while (curent.y < (coord.y + scale))
@@ -90,8 +90,8 @@ void			paint_circle(t_cub *cub, int trgb, t_point coord, int scale)
 		{
 			if (curent.x >= (double)cub->res.x)
 				break ;
-			if (sqrt(pow(abs(curent.x - coord.x), 2) +
-					pow(abs(curent.y - coord.y), 2)) < scale)
+			if (sqrt(pow(abs((int)(curent.x - coord.x)), 2) +
+					pow(abs((int)(curent.y - coord.y)), 2)) < scale)
 				my_mlx_pixel_put(cub->data, curent.x, curent.y, trgb);
 			curent.x++;
 		}

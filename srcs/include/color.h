@@ -6,7 +6,7 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 00:22:30 by ndeana            #+#    #+#             */
-/*   Updated: 2020/09/16 00:24:15 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/06 00:28:25 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,12 @@
 # define COLOR_H
 
 int						create_trgb(int t, int r, int g, int b);
-int						get_r(int trgb);
 int						set_r(int trgb, int r);
-int						get_g(int trgb);
 int						set_g(int trgb, int g);
-int						get_b(int trgb);
 int						set_b(int trgb, int b);
+int						get_r(int trgb);
+int						get_g(int trgb);
+int						get_b(int trgb);
 int						add_shade(int trgb, double distance);
-int						get_opposite(int trgb);
 
 #endif

@@ -6,24 +6,25 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/24 01:23:04 by ndeana            #+#    #+#             */
-/*   Updated: 2020/08/29 22:22:57 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/13 17:43:25 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void*))
+t_list	*ft_lstclear(t_list *lst, void (*del)(void*))
 {
 	t_list	*tlst;
 
-	if (!(tlst = *lst) || !lst)
-		return ;
+	tlst = lst;
+	if (!lst)
+		return (lst);
 	if (del)
-		while (*lst)
+		while (lst)
 		{
-			tlst = (*lst)->next;
-			ft_lstdelone(*lst, del);
-			*lst = tlst;
+			tlst = lst->next;
+			lst = ft_lstdelone(lst, del);
+			lst = tlst;
 		}
-	*lst = NULL;
+	return (NULL);
 }

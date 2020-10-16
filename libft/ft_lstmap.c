@@ -6,7 +6,7 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/24 01:23:23 by ndeana            #+#    #+#             */
-/*   Updated: 2020/05/28 12:11:23 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/13 17:44:14 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,14 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	if (!lst || !f)
 		return (NULL);
 	if (!(new_next = ft_lstnew(f(lst->content))))
-	{
-		ft_lstclear(&lst, del);
 		return (NULL);
-	}
 	new_lst = new_next;
 	lst = lst->next;
 	while (lst)
 	{
 		if (!(new_next = ft_lstnew(f(lst->content))))
 		{
-			ft_lstclear(&lst, del);
-			ft_lstclear(&new_lst, del);
+			ft_lstclear(new_lst, del);
 			break ;
 		}
 		lst = lst->next;

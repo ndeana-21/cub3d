@@ -6,73 +6,57 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/22 00:21:20 by ndeana            #+#    #+#             */
-/*   Updated: 2020/09/16 16:43:43 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/15 23:10:14 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void			minimap_player(t_map *map, t_cub *cub, int scale)
+void		render_scene(t_cub *cub, t_ray *ray, t_sprites *sprite)
 {
-	t_vec 	vector;
-	t_wall	wall1;
-	t_wall	wall2;
-	t_wall	wall3;
-	t_wall	wall4;
+	t_res	point;
 
-	wall1.vec = make_vector(0, 0, map->res.x, 0);
-	wall2.vec = make_vector(map->res.x, 0, map->res.x, map->res.y);
-	wall3.vec = make_vector(map->res.x, map->res.y, 0, map->res.y);
-	wall4.vec = make_vector(0, map->res.y, 0, 0);
-	
-	wall1.next_wall = &wall2;
-	wall2.next_wall = &wall3;
-	wall3.next_wall = &wall4;
-	wall4.next_wall = NULL;
-	vector = ray_cast(&wall1, map->player->pos, map->res, map->player->pow);
-	vector.start.x = vector.start.x * scale;
-	vector.start.y = vector.start.y * scale;
-	vector.end.x = vector.end.x * scale;
-	vector.end.y = vector.end.y * scale;
-	paint_circle(cub, create_trgb(0,0,255,0), vector.start, scale / 2);
-	paint_line(cub, create_trgb(0,255,100,100), vector);
-}
-
-void			minimap(t_map *map, t_cub *cub, int scale)
-{
-	t_point	coord;
-
-	coord.y = 0;
-	while (coord.y < map->res.y)
+	point = (t_res){-1, -1};
+	while (++point.x < cub->res.x)
 	{
-		coord.x = 0;
-		while (coord.x < map->res.x)
-		{
-			if (map->map[(int)coord.y][(int)coord.x] == '1')
-				paint_square(cub, create_trgb(0, 255, 255, 255), coord, scale);
-			else if (map->map[(int)coord.y][(int)coord.x] == '2')
-				paint_square(cub, create_trgb(0, 255, 0, 255), coord, scale);
-			else
-				paint_square(cub, create_trgb(0, 0, 0, 0), coord, scale);
-			coord.x++;
-		}
-		coord.y++;
+		render_cf(ray[point.x], cub, point);
+		render_wall(ray[point.x], cub, point, *cub->map->walls);
 	}
-	minimap_player(cub->map, cub, scale);
+	render_sprite(ray, cub, sprite);
+	if (cub->keys.m)
+		minimap(cub->map, cub);
 }
 
-int		render_next_frame(t_cub *cub)
+int			render_frame(t_cub *cub)
 {
-	if (player_keys_move(cub))
-	{
-		cub->data->img = mlx_new_image(cub->mlx, cub->res.x, cub->res.y);
-		cub->data->addr = mlx_get_data_addr(cub->data->img,
-											&cub->data->bits_per_pixel,
-											&cub->data->line_length,
-											&cub->data->endian);
-		minimap(cub->map, cub, 20);
-		mlx_put_image_to_window(cub->mlx, cub->win, cub->data->img, 0, 0);
+	if (!(cub->data->img = mlx_new_image(cub->mlx, cub->res.x, cub->res.y)))
+		print_error(cub, "MLX_ERROR can not create new img");
+	if (!(cub->data->addr = mlx_get_data_addr(cub->data->img, &cub->data->bpp,
+									&cub->data->line_len, &cub->data->endian)))
+		print_error(cub, "MLX_ERROR can not get addr");
+	rays_casting(cub->map->ray, cub, cub->map, cub->res.x);
+	render_scene(cub, cub->map->ray, cub->map->sprite);
+	return (0);
+}
+
+int			render_next_frame(t_cub *cub)
+{
+	if (cub->data->img && cub->mlx)
 		mlx_destroy_image(cub->mlx, cub->data->img);
+	if (!cub->keys.h && cub->mlx)
+		mlx_mouse_show(cub->mlx, cub->win);
+	else
+	{
+		mlx_mouse_hide(cub->mlx, cub->win);
+		mlx_mouse_move(cub->mlx, cub->win, cub->res.x / 2, cub->res.y / 2);
+		cub->map->player->pow = pow_turn(cub->map->player->pow,
+			cub->keys.mouse_x * -(TR_SPEED / 10), 0, 360);
+		cub->map->player->pow_y = pow_turn_updown(cub->map->player->pow_y,
+			cub->keys.mouse_y * -(TR_SPEED / 6));
 	}
-	return(0);
+	player_keys_move(cub);
+	render_frame(cub);
+	mlx_put_image_to_window(cub->mlx, cub->win, cub->data->img, 0, 0);
+	mlx_do_sync(cub->mlx);
+	return (0);
 }

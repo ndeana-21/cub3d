@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   write_bmpfileheader.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 23:25:33 by ndeana            #+#    #+#             */
-/*   Updated: 2020/10/14 12:38:03 by ndeana           ###   ########.fr       */
+/*   Created: 2020/01/18 14:06:11 by ndeana            #+#    #+#             */
+/*   Updated: 2020/10/05 18:19:47 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "bitmapfile.h"
 
-void	*ft_memcpy(void *to, const void *from, size_t n)
+void	write_bmpfileheader(int fd, t_bitmapfileheader bmpfh)
 {
-	unsigned char	*buff_from;
-	unsigned char	*buff_to;
-	size_t			i;
+	unsigned char buf[14];
 
-	if (!to && !from)
-		return (NULL);
-	buff_from = (unsigned char*)from;
-	buff_to = (unsigned char*)to;
-	i = -1;
-	while (++i < n)
-	{
-		if (buff_from[i])
-			buff_to[i] = buff_from[i];
-		else
-			buff_to[i] = 0;
-	}
-	return (to);
+	buf[0] = bmpfh.filetype.d[0];
+	buf[1] = bmpfh.filetype.d[1];
+	dint4cpy(bmpfh.filesize, &buf[2]);
+	dint4cpy(bmpfh.reserved, &buf[6]);
+	dint4cpy(bmpfh.pixeldata_offset, &buf[10]);
+	write(fd, buf, 14);
 }

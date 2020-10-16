@@ -6,13 +6,13 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/31 20:04:50 by ndeana            #+#    #+#             */
-/*   Updated: 2020/08/28 18:54:23 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/05 23:59:07 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_strdel(char **s)
+int			ft_strdel(char **s)
 {
 	if (s != NULL)
 	{
@@ -73,7 +73,6 @@ int			read_fd(int fd, char **static_fd, char *buf)
 		if (ft_strchr(static_fd[fd], '\n'))
 			break ;
 	}
-
 	return (read_out);
 }
 
@@ -103,6 +102,5 @@ int			ft_get_next_line(int fd, char **line)
 		return (0);
 	}
 	free(buf);
-
 	return (addline(&static_fd[fd], line));
 }

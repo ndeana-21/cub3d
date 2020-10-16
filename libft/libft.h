@@ -6,7 +6,7 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/30 02:03:23 by ndeana            #+#    #+#             */
-/*   Updated: 2020/09/06 01:16:04 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/13 17:40:43 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 char				*ft_strchr(const char *s, int c);
 char				*ft_strnstr(const char *s, const char *find, size_t n);
 char				*ft_strrchr(const char *s, int c);
-int					ft_strsample(const char *str ,const char *sample);
+int					ft_strsample(const char *str, const char *sample);
 int					ft_atoi(char *s);
 int					ft_isalnum(int c);
 int					ft_isalpha(int c);
@@ -72,13 +72,19 @@ t_list				*ft_lstnnext(t_list *lst, size_t n);
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
 t_list				*ft_lstnew(void *content);
+char				**ft_lsttopage(t_list *lst, int *y);
 void				ft_lstadd_back(t_list **lst, t_list *new);
 void				ft_lstadd_front(t_list **lst, t_list *new);
-void				ft_lstclear(t_list **lst, void (*del)(void*));
-void				ft_lstdelone(t_list *lst, void (*del)(void*));
+t_list				*ft_lstclear(t_list *lst, void (*del)(void*));
+t_list				*ft_lstdelone(t_list *lst, void (*del)(void*));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 
 int					ft_strdel(char **s);
 int					ft_pagedel(char ***page, size_t len);
+void				**ft_mda(size_t size, size_t wide, size_t hight);
+void				ft_fda(void	**double_arr, size_t hight);
+
+double				ft_deg(double rad);
+double				ft_rad(double deg);
 
 #endif

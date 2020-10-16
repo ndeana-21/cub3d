@@ -1,34 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   save_bmp.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 23:25:33 by ndeana            #+#    #+#             */
-/*   Updated: 2020/10/14 12:38:03 by ndeana           ###   ########.fr       */
+/*   Created: 2020/10/05 00:45:27 by ndeana            #+#    #+#             */
+/*   Updated: 2020/10/09 19:51:49 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "cub3d.h"
 
-void	*ft_memcpy(void *to, const void *from, size_t n)
+void			save_bmp(t_cub *cub)
 {
-	unsigned char	*buff_from;
-	unsigned char	*buff_to;
-	size_t			i;
+	int		**buf;
+	t_res	cord;
 
-	if (!to && !from)
-		return (NULL);
-	buff_from = (unsigned char*)from;
-	buff_to = (unsigned char*)to;
-	i = -1;
-	while (++i < n)
+	if (!(buf = (int **)ft_mda(sizeof(int), cub->res.x, cub->res.y)))
+		print_error(cub, "ERROR malloc");
+	cord.y = -1;
+	while (++cord.y < cub->res.y)
 	{
-		if (buff_from[i])
-			buff_to[i] = buff_from[i];
-		else
-			buff_to[i] = 0;
+		cord.x = -1;
+		while (++cord.x < cub->res.x)
+			buf[cord.y][cord.x] = my_mlx_pixel_get(cub->data, cord.x, cord.y);
 	}
-	return (to);
+	create_bmpfile("screen.bmp", cub->res.x, cub->res.y, buf);
+	exit(0);
 }

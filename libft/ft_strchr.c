@@ -6,7 +6,7 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/08 01:17:37 by ndeana            #+#    #+#             */
-/*   Updated: 2020/08/30 02:05:15 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/05 23:55:43 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-int				ft_strsample(const char *str ,const char *sample)
+int		ft_strsample(const char *str, const char *sample)
 {
 	int		i;
 	int		j;

@@ -6,7 +6,7 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/12 15:26:33 by ndeana            #+#    #+#             */
-/*   Updated: 2020/09/16 00:24:40 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/06 00:02:13 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	get_b(int trgb)
 	return (trgb & 0xFF);
 }
 
-int		add_shade(int trgb, double distance)
+int	add_shade(int trgb, double distance)
 {
 	int		r;
 	int		g;

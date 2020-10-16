@@ -1,34 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   color_utils.c                                      :+:      :+:    :+:   */
+/*   player_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/21 04:44:34 by ndeana            #+#    #+#             */
-/*   Updated: 2020/10/10 13:00:33 by ndeana           ###   ########.fr       */
+/*   Created: 2020/10/05 18:11:00 by ndeana            #+#    #+#             */
+/*   Updated: 2020/10/07 00:18:11 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "color.h"
+#include "cub3d.h"
 
-int	set_r(int trgb, int r)
+double	pow_turn(double pow, double turn, double min, double max)
 {
-	if (r < 0 || r > 255)
-		return (-1);
-	return (trgb | (r << 16));
+	pow += turn;
+	if (max < pow)
+		pow -= max;
+	else if (min > pow)
+		pow += max;
+	return (pow);
 }
 
-int	set_g(int trgb, int g)
+double	pow_turn_updown(double pow, double turn)
 {
-	if (g < 0 || g > 255)
-		return (-1);
-	return (trgb | (g << 8));
+	pow += turn;
+	if (180 < pow)
+		pow = 180;
+	else if (0 > pow)
+		pow = 0;
+	return (pow);
 }
 
-int	set_b(int trgb, int b)
+int		player_cam_y(int res_y, double player_pow_y)
 {
-	if (b < 0 || b > 255)
-		return (-1);
-	return (trgb | b);
+	return (res_y * (player_pow_y / 90 - 1));
 }

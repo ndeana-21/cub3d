@@ -6,7 +6,7 @@
 #    By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/05/02 14:32:17 by ndeana            #+#    #+#              #
-#    Updated: 2020/08/21 03:25:06 by ndeana           ###   ########.fr        #
+#    Updated: 2020/10/08 00:33:08 by ndeana           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,37 +21,37 @@ SRC 	=	ft_memset.c			ft_bzero.c			ft_memcpy.c			ft_memccpy.c	\
 			ft_putendl_fd.c		ft_putnbr_fd.c		ft_get_next_line.c					\
 			ft_lstadd_back.c	ft_lstclear.c		ft_lstiter.c		ft_lstmap.c		\
 			ft_lstsize.c		ft_lstadd_front.c	ft_lstdelone.c		ft_lstlast.c	\
-			ft_lstnew.c	
+			ft_lstnew.c			ft_double_arr.c		ft_math.c			
 
 NAME	= libft.a
 OBJ_DIR	= obj
 OBJ		= $(SRC:.c=.o)
 OBJS	= $(addprefix $(OBJ_DIR)/, $(OBJ))
 INCLUDES= ./
-CC		= gcc
+CC		= clang
 CF		= -Wall -Wextra -Werror
 RM		= rm -rf
 .PHONY: all clean fclean re norme
 
 .c.o:
-		@${CC} ${CF} -g -c $< -o ${<:.c=.o}
+	@${CC} ${CF} -g -c $< -o ${<:.c=.o}
 
 $(NAME): ${OBJ}
-		@ar rcs ${NAME} ${OBJ}
+	@ar rcs ${NAME} ${OBJ}
 
 all:	${NAME}
-		@$(PRINT) "$(FGREEN)make libft$(PNULL)"
+	@$(PRINT) "$(FGREEN)make libft$(PNULL)"
 
 clean:
-		@${RM} ${OBJ}
-		@$(PRINT) "$(FYELLOW)remove objs of libft$(PNULL)"
+	@${RM} ${OBJ}
+	@$(PRINT) "$(FYELLOW)remove objs of libft$(PNULL)"
 
 fclean:	clean
-		@${RM} ${NAME}
-		@$(PRINT) "$(FYELLOW)remove libft$(PNULL)"
+	@${RM} ${NAME}
+	@$(PRINT) "$(FYELLOW)remove libft$(PNULL)"
 
 norme:
-		norminette $(SRC) libft.h
+	@norminette $(SRC) libft.h
 
 re:		fclean all
 
