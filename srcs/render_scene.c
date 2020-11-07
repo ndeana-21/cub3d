@@ -6,7 +6,7 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 00:50:55 by ndeana            #+#    #+#             */
-/*   Updated: 2020/10/16 19:11:26 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/15 15:09:32 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,15 +98,6 @@ static void		minimap_player(t_map *map, t_cub *cub, int scale)
 		map->player->pos.x * scale, map->player->pos.y * scale}, scale / 2);
 }
 
-t_vec			vec_scale(t_vec vec, int scale)
-{
-	vec.start.x *= scale;
-	vec.start.y *= scale;
-	vec.end.x *= scale;
-	vec.end.y *= scale;
-	return (vec);
-}
-
 void			minimap(t_map *map, t_cub *cub)
 {
 	t_point	coord;
@@ -122,30 +113,6 @@ void			minimap(t_map *map, t_cub *cub)
 				paint_square(cub, create_trgb(0, 255, 255, 255), coord, scale);
 			else
 				paint_square(cub, create_trgb(0, 0, 0, 0), coord, scale);
-	}
-	t_wall	*wall = map->walls->north;
-	while (wall)
-	{
-		paint_line(cub, create_trgb(0, 0, 0, 255), vec_scale(wall->vec, scale));
-		wall = (t_wall *)wall->next_wall;
-	}
-	wall = map->walls->south;
-	while (wall)
-	{
-		paint_line(cub, create_trgb(0, 255, 0, 0), vec_scale(wall->vec, scale));
-		wall = (t_wall *)wall->next_wall;
-	}
-	wall = map->walls->east;
-	while (wall)
-	{
-		paint_line(cub, create_trgb(0, 0, 255, 0), vec_scale(wall->vec, scale));
-		wall = (t_wall *)wall->next_wall;
-	}
-	wall = map->walls->west;
-	while (wall)
-	{
-		paint_line(cub, create_trgb(0, 255, 0, 255), vec_scale(wall->vec, scale));
-		wall = (t_wall *)wall->next_wall;
 	}
 	minimap_player(cub->map, cub, scale);
 }

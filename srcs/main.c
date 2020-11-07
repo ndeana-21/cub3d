@@ -6,7 +6,7 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/06 22:52:08 by ndeana            #+#    #+#             */
-/*   Updated: 2020/10/15 14:52:43 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/20 12:52:48 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	main(int argc, char **argv)
 	mlx_hook(cub->win, 2, 1L << 0, hook_press, cub);
 	mlx_hook(cub->win, 3, 1L << 1, hook_release, cub);
 	mlx_hook(cub->win, 6, 1L << 6, hook_mouse_x, cub);
-	mlx_hook(cub->win, 18, 1L << 18, close_window, cub);
+	mlx_hook(cub->win, 17, 1L << 17, close_window, cub);
 	mlx_loop_hook(cub->mlx, render_next_frame, cub);
 	mlx_loop(cub->mlx);
 	return (0);

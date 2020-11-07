@@ -6,7 +6,7 @@
 #    By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/03 16:47:25 by ndeana            #+#    #+#              #
-#    Updated: 2020/10/14 23:16:29 by ndeana           ###   ########.fr        #
+#    Updated: 2020/10/18 17:21:22 by ndeana           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,7 @@ INCLUDES	=	$(HEADER_INCL) $(LIBFT_INCL) $(MLX_INCL) $(LBMF_INCL)
 
 MAKE_FLAGS	=	--no-print-directory -si -C
 CC			=	clang
-CFLAGS		=	-Wall -Wextra -Werror -g -O0 $(INCLUDES)
+CFLAGS		=	-Wall -Wextra -Werror $(INCLUDES)
 NAME		=	cub3D
 
 ARGS		=	map2.cub
@@ -94,19 +94,11 @@ fclean:
 	@$(PRINT) "$(FYELLOW)fclean LBMF$(PNULL)"
 
 
-re:			fclean lib
+re:			fclean
 	@make --no-print-directory
 	@$(PRINT) "$(FGREEN)made CUB3D$(PNULL)"
 
-fre:		fclean lib
-	@make re $(MAKE_FLAGS) $(MLX_PATH)
-	@$(PRINT) "$(FGREEN)made MLX$(PNULL)"
-	@make re $(MAKE_FLAGS) $(LIBFT_PATH)
-	@$(PRINT) "$(FGREEN)made LFT$(PNULL)"
-	@make
-	@$(PRINT) "$(FGREEN)made CUB3D$(PNULL)"
-
-.PHONY:		all clean fclean re fre norme bonus run makelib
+.PHONY:		all clean fclean re norme bonus run makelib
 
 # **************************************************************************** #
 #								Utilits										   #

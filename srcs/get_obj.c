@@ -6,7 +6,7 @@
 /*   By: ndeana <ndeana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 20:39:41 by ndeana            #+#    #+#             */
-/*   Updated: 2020/10/16 18:40:45 by ndeana           ###   ########.fr       */
+/*   Updated: 2020/10/18 17:09:38 by ndeana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,12 @@ static void		horizontal_wall_init(t_cub *cub, t_wall *wall,
 			if (ft_strchr("1", cub->map->map[(int)point.y][(int)point.x]) &&
 				check_side(cub->map, point, side, NO_VISION))
 			{
-				tmp_lst->next_wall = malloc(sizeof(t_wall));
-				if (!tmp_lst->next_wall)
+				if (!(tmp_lst->next_wall = malloc(sizeof(t_wall))))
 					print_error(cub, "ERROR malloc");
 				tmp_lst = (t_wall *)tmp_lst->next_wall;
 				tmp_lst->vec.start = (t_point){point.x, point.y + plus_y};
-				while (ft_strchr("1",
-						cub->map->map[(int)point.y][(int)point.x]))
+				while ((point.x < cub->map->res.x) &&
+					(ft_strchr("1", cub->map->map[(int)point.y][(int)point.x])))
 					point.x++;
 				tmp_lst->vec.end = (t_point){point.x, point.y + plus_y};
 			}
@@ -79,14 +78,13 @@ static void		vertical_wall_init(t_cub *cub, t_wall *wall,
 			if (ft_strchr("1", cub->map->map[(int)point.y][(int)point.x]) &&
 				check_side(cub->map, point, side, NO_VISION))
 			{
-				tmp_lst->next_wall = malloc(sizeof(t_wall));
-				if (!tmp_lst->next_wall)
+				if (!(tmp_lst->next_wall = malloc(sizeof(t_wall))))
 					print_error(cub, "ERROR malloc");
 				tmp_lst = (t_wall *)tmp_lst->next_wall;
 				tmp_lst->next_wall = NULL;
 				tmp_lst->vec.start = (t_point){point.x + plus_x, point.y};
-				while (ft_strchr("1",
-						cub->map->map[(int)point.y][(int)point.x]))
+				while ((point.y < cub->map->res.y) &&
+					(ft_strchr("1", cub->map->map[(int)point.y][(int)point.x])))
 					point.y++;
 				tmp_lst->vec.end = (t_point){point.x + plus_x, point.y};
 			}
